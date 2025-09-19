@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:meditation_app/pages/meditate/mediate_music_page.dart';
 import 'package:meditation_app/pages/sleep/sleep_highlight_page.dart';
 import 'package:meditation_app/providers/user_provider.dart';
+import 'package:meditation_app/providers/audio_data_provider.dart';
+import 'package:meditation_app/models/audio.dart';
 import 'package:provider/provider.dart';
 
 class HomePageView extends StatelessWidget {
@@ -112,21 +114,30 @@ class HomePageView extends StatelessWidget {
                 fontWeight: FontWeight.bold
               ),
             ),
-            SizedBox(
-              height: 300,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  spacing: 20,
-                  children: [
-                    RecommendCard(title: "Focus", color: Color(0xffAFDBC5), image: "assets/images/home/floating_meditate.png",),
-                    RecommendCard(title: "Happines", color: Color(0xffFEE3B4), image: "assets/images/home/floating_meditate_female.png",),
-                    RecommendCard(title: "Focus", color: Color(0xffAFDBC5), image: "assets/images/home/floating_meditate.png",),
-                    RecommendCard(title: "Happines", color: Color(0xffFEE3B4), image: "assets/images/home/floating_meditate_female.png",),
-                    RecommendCard(title: "Focus", color: Color(0xffAFDBC5), image: "assets/images/home/floating_meditate.png",),
-                  ],
-                ),
-              ),
+            Consumer<AudioDataProvider>(
+              builder: (context, audioProvider, child) {
+                final homeAudios = audioProvider.audioList
+                    .where((audio) => audio.id.startsWith('home_'))
+                    .take(5)
+                    .toList();
+                
+                return SizedBox(
+                  height: 300,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      spacing: 20,
+                      children: homeAudios.map((audio) => RecommendCard(
+                        audio: audio,
+                        showFavorite: true,
+                        color: audio.id == 'home_001' 
+                            ? Color(0xffAFDBC5) 
+                            : Color(0xffFEE3B4),
+                      )).toList(),
+                    ),
+                  ),
+                );
+              },
             )
           ],
         ),
@@ -138,31 +149,59 @@ class HomePageView extends StatelessWidget {
 class RecommendCard extends StatelessWidget {
   const RecommendCard({
     super.key, 
-    required this.color, 
-    required this.title, 
-    required this.image,
+    this.color,
+    this.title,
+    this.image,
     this.textBeforeDot = "MEDITATION",
     this.textAfterDot = "3 - 10 MIN",
     this.titleColor = const Color(0xff3F414E),
     this.subtitleColor = const Color(0xffA1A4B2),
     this.dotColor = const Color(0xffA1A4B2),
     this.onTap,
+    this.audio,
+    this.showFavorite = false,
   });
-  final Color color;
-  final String title;
-  final String image;
+  final Color? color;
+  final String? title;
+  final String? image;
   final String textBeforeDot;
   final String textAfterDot;
   final Color titleColor;
   final Color subtitleColor;
   final Color dotColor;
   final VoidCallback? onTap;
+  final Audio? audio;
+  final bool showFavorite;
 
   @override
   Widget build(BuildContext context) {
+    final displayColor = color ?? (audio?.img != null ? Color(0xff3F414E) : Color(0xffAFDBC5));
+    final displayTitle = title ?? audio?.title ?? "Unknown";
+    final displayImage = image ?? audio?.img ?? "assets/images/home/floating_meditate.png";
+    final displayTextBeforeDot = audio?.textBeforeDot ?? textBeforeDot;
+    final displayTextAfterDot = audio?.textAfterDot ?? textAfterDot;
+
     return InkWell(
       onTap: onTap ?? () {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => SleepHighlightPage(image: image, title: title, textBeforeDot: textBeforeDot, textAfterDot: textAfterDot)));
+        if (audio != null) {
+          if (audio!.category == Category.sleep) {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => SleepHighlightPage(
+              image: displayImage, 
+              title: displayTitle, 
+              textBeforeDot: displayTextBeforeDot, 
+              textAfterDot: displayTextAfterDot
+            )));
+          } else {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => MeditateMusicPage(title: displayTitle)));
+          }
+        } else {
+          Navigator.push(context, MaterialPageRoute(builder: (_) => SleepHighlightPage(
+            image: displayImage, 
+            title: displayTitle, 
+            textBeforeDot: displayTextBeforeDot, 
+            textAfterDot: displayTextAfterDot
+          )));
+        }
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,13 +212,13 @@ class RecommendCard extends StatelessWidget {
             height: 113,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: color,
+              color: displayColor,
               image: DecorationImage(
                 fit: BoxFit.cover,
-                image: AssetImage(image))
+                image: AssetImage(displayImage))
             ),
           ),
-          Text(title,
+          Text(displayTitle,
             style: TextStyle(
               color: titleColor,
               fontWeight: FontWeight.bold,
@@ -187,7 +226,7 @@ class RecommendCard extends StatelessWidget {
             ),
           ),
            Text.rich(
-            TextSpan(text: "$textBeforeDot  ",
+            TextSpan(text: "$displayTextBeforeDot  ",
             style: TextStyle(
               color: subtitleColor,
               fontWeight: FontWeight.w500,
@@ -206,7 +245,7 @@ class RecommendCard extends StatelessWidget {
               )
               ),
               TextSpan(
-                text: " $textAfterDot",
+                text: " $displayTextAfterDot",
                 style: TextStyle(
                 color: subtitleColor,
                 fontWeight: FontWeight.w500

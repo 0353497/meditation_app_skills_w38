@@ -3,6 +3,8 @@ import 'package:meditation_app/pages/sleep/sleep_play_music_page.dart';
 import 'package:meditation_app/pages/views/home_page_view.dart';
 import 'package:meditation_app/providers/tab_bar_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:meditation_app/providers/audio_data_provider.dart';
+import 'package:meditation_app/models/audio.dart';
 
 class NormalSleepView extends StatelessWidget {
   const NormalSleepView({super.key});
@@ -87,27 +89,24 @@ class NormalSleepView extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 600,
-                child: GridView.count(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  crossAxisCount: 2,
-                  children: [
-                    RecommendCard(title: "Night Island", color: Color(0xff3F414E), image: "assets/images/sleep/moon_clouds.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                    RecommendCard(title: "Sweet Sleep", color: Color(0xff3F414E), image: "assets/images/sleep/sweet_sleep.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                    RecommendCard(title: "Good Night", color: Color(0xff3F414E), image: "assets/images/sleep/good_sleep.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                    RecommendCard(title: "Night Island", color: Color(0xff3F414E), image: "assets/images/sleep/cloud_pink_moon.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                    RecommendCard(title: "Night Island", color: Color(0xff3F414E), image: "assets/images/sleep/moon_clouds.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                    RecommendCard(title: "Sweet Sleep", color: Color(0xff3F414E), image: "assets/images/sleep/sweet_sleep.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                    RecommendCard(title: "Good Night", color: Color(0xff3F414E), image: "assets/images/sleep/good_sleep.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                    RecommendCard(title: "Night Island", color: Color(0xff3F414E), image: "assets/images/sleep/moon_clouds.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                    RecommendCard(title: "Night Island", color: Color(0xff3F414E), image: "assets/images/sleep/moon_clouds.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                    RecommendCard(title: "Sweet Sleep", color: Color(0xff3F414E), image: "assets/images/sleep/sweet_sleep.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                    RecommendCard(title: "Good Night", color: Color(0xff3F414E), image: "assets/images/sleep/good_sleep.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                    RecommendCard(title: "Night Island", color: Color(0xff3F414E), image: "assets/images/sleep/moon_clouds.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                  ],            
-                ),
+              Consumer<AudioDataProvider>(
+                builder: (context, audioProvider, child) {
+                  final sleepAudios = audioProvider.getAudiosByCategory(Category.sleep);
+                  return SizedBox(
+                    height: 600,
+                    child: GridView.count(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      children: sleepAudios.map((audio) => RecommendCard(
+                        audio: audio,
+                        showFavorite: true,
+                        titleColor: Color(0xffE6E7F2),
+                        subtitleColor: Color(0xffE6E7F2),
+                      )).toList(),
+                    ),
+                  );
+                },
               )
             ],
           ),
@@ -151,7 +150,7 @@ class _SleepIconButtonsRowState extends State<SleepIconButtonsRow> {
             SizedBox(width: 20,),
             SleepIconButton(backgroundColor: selectedIndex == 0 ? Color(0xff8E97FD) : widget.backgroundColor, text: "All", icon: "assets/images/icons/all_sleep.png", onTap: (value) => _changeBackgroundColorOfButton(0), isSelected: selectedIndex == 0, index: 0, highlightLabelColor: widget.highlightLabelColor,),
             SleepIconButton(backgroundColor: selectedIndex == 1 ? Color(0xff8E97FD) : widget.backgroundColor, text: "My", icon: "assets/images/icons/love_sleep.png", onTap: (value) => _changeBackgroundColorOfButton(1), isSelected: selectedIndex == 1, index: 1, highlightLabelColor: widget.highlightLabelColor,),
-            SleepIconButton(backgroundColor: selectedIndex == 2 ? Color(0xff8E97FD) : widget.backgroundColor, text: "Anxious", icon: "assets/images/icons/anxious_sleep.png", onTap: (value) => _changeBackgroundColorOfButton(2), isSelected: selectedIndex == 2, index: 2, highlightLabelColor: widget.highlightLabelColor,),
+            SleepIconButton(backgroundColor: selectedIndex == 2 ? Color.fromARGB(255, 70, 72, 102) : widget.backgroundColor, text: "Anxious", icon: "assets/images/icons/anxious_sleep.png", onTap: (value) => _changeBackgroundColorOfButton(2), isSelected: selectedIndex == 2, index: 2, highlightLabelColor: widget.highlightLabelColor,),
             SleepIconButton(backgroundColor: selectedIndex == 3 ? Color(0xff8E97FD) : widget.backgroundColor, text: "Sleep", icon: "assets/images/icons/moon_sleep.png", onTap: (value) => _changeBackgroundColorOfButton(3), isSelected: selectedIndex == 3, index: 3, highlightLabelColor: widget.highlightLabelColor,),
             SleepIconButton(backgroundColor: selectedIndex == 4 ? Color(0xff8E97FD) : widget.backgroundColor, text: "Kids", icon: "assets/images/icons/kids_sleep.png", onTap: (value) => _changeBackgroundColorOfButton(4), isSelected: selectedIndex == 4, index: 4, highlightLabelColor: widget.highlightLabelColor,),
           ],

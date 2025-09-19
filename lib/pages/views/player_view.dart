@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:meditation_app/pages/meditate/mediate_music_page.dart';
 import 'package:meditation_app/pages/sleep/sleep_play_music_page.dart';
-import 'package:meditation_app/pages/views/home_page_view.dart';
 import 'package:meditation_app/providers/tab_bar_provider.dart';
+import 'package:meditation_app/providers/audio_data_provider.dart';
+import 'package:meditation_app/pages/views/home_page_view.dart';
 import 'package:provider/provider.dart';
 
 class PlayerView extends StatelessWidget {
@@ -88,125 +88,30 @@ class PlayerView extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 1000,
-                child: GridView.count(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  crossAxisCount: 2,
-                  children: [
-                    RecommendCard(
-                      title: "High Mountains", 
-                      color: Color(0xff3F414E), 
-                      image: "assets/images/meditate/7_days_calm_bg.png", 
-                      titleColor: Color(0xff3F414E), 
-                      subtitleColor: Color(0xff3F414E), 
-                      textBeforeDot: "45 MIN", 
-                      textAfterDot: "CALMP MUSIC",
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => MeditateMusicPage(title: "High Mountains"))),
+              Consumer<AudioDataProvider>(
+                builder: (context, audioProvider, child) {
+                  final meditateAudios = audioProvider.audioList
+                      .where((audio) => audio.id.startsWith('meditate_'))
+                      .toList();
+                  
+                  return SizedBox(
+                    height: 1000,
+                    child: GridView.count(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      children: meditateAudios.map((audio) => RecommendCard(
+                        audio: audio,
+                        showFavorite: true,
+                        titleColor: Color(0xff3F414E),
+                        subtitleColor: Color(0xff3F414E),
+                        color: audio.id == 'meditate_002' 
+                            ? Color(0xffF9F0E3) 
+                            : Color(0xff3F414E),
+                      )).toList(),
                     ),
-                    RecommendCard(
-                      title: "Resting Art", 
-                      color: Color(0xffF9F0E3), 
-                      image: "assets/images/meditate/daily_calm_bg.png", 
-                      titleColor: Color(0xff3F414E), 
-                      subtitleColor: Color(0xff3F414E), 
-                      textBeforeDot: "45 MIN", 
-                      textAfterDot: "CALMP MUSIC",
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => MeditateMusicPage(title: "Resting Art"))),
-                    ),
-                    RecommendCard(
-                      title: "Good Night", 
-                      color: Color(0xff3F414E), 
-                      image: "assets/images/meditate/happy_morning.png", 
-                      titleColor: Color(0xff3F414E), 
-                      subtitleColor: Color(0xff3F414E), 
-                      textBeforeDot: "45 MIN", 
-                      textAfterDot: "CALMP MUSIC",
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => MeditateMusicPage(title: "Good Night"))),
-                    ),
-                    RecommendCard(
-                      title: "Relaxing Beach", 
-                      color: Color(0xff3F414E), 
-                      image: "assets/images/meditate/surf_waves_bg.png", 
-                      titleColor: Color(0xff3F414E), 
-                      subtitleColor: Color(0xff3F414E), 
-                      textBeforeDot: "45 MIN", 
-                      textAfterDot: "CALMP MUSIC",
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => MeditateMusicPage(title: "Relaxing Beach"))),
-                    ),
-                    RecommendCard(
-                      title: "High Mountains", 
-                      color: Color(0xff3F414E), 
-                      image: "assets/images/meditate/7_days_calm_bg.png", 
-                      titleColor: Color(0xff3F414E), 
-                      subtitleColor: Color(0xff3F414E), 
-                      textBeforeDot: "45 MIN", 
-                      textAfterDot: "CALMP MUSIC",
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => MeditateMusicPage(title: "High Mountains"))),
-                    ),
-                    RecommendCard(
-                      title: "Resting Art", 
-                      color: Color(0xffF9F0E3), 
-                      image: "assets/images/meditate/daily_calm_bg.png", 
-                      titleColor: Color(0xff3F414E), 
-                      subtitleColor: Color(0xff3F414E), 
-                      textBeforeDot: "45 MIN", 
-                      textAfterDot: "CALMP MUSIC",
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => MeditateMusicPage(title: "Resting Art"))),
-                    ),
-                    RecommendCard(
-                      title: "Good Night", 
-                      color: Color(0xff3F414E), 
-                      image: "assets/images/meditate/happy_morning.png", 
-                      titleColor: Color(0xff3F414E), 
-                      subtitleColor: Color(0xff3F414E), 
-                      textBeforeDot: "45 MIN", 
-                      textAfterDot: "CALMP MUSIC",
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => MeditateMusicPage(title: "Good Night"))),
-                    ),
-                    RecommendCard(
-                      title: "Relaxing Beach", 
-                      color: Color(0xff3F414E), 
-                      image: "assets/images/meditate/surf_waves_bg.png", 
-                      titleColor: Color(0xff3F414E), 
-                      subtitleColor: Color(0xff3F414E), 
-                      textBeforeDot: "45 MIN", 
-                      textAfterDot: "CALMP MUSIC",
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => MeditateMusicPage(title: "Relaxing Beach"))),
-                    ),
-                    RecommendCard(
-                      title: "High Mountains", 
-                      color: Color(0xff3F414E), 
-                      image: "assets/images/meditate/7_days_calm_bg.png", 
-                      titleColor: Color(0xff3F414E), 
-                      subtitleColor: Color(0xff3F414E), 
-                      textBeforeDot: "45 MIN", 
-                      textAfterDot: "CALMP MUSIC",
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => MeditateMusicPage(title: "High Mountains"))),
-                    ),
-                    RecommendCard(
-                      title: "Resting Art", 
-                      color: Color(0xffF9F0E3), 
-                      image: "assets/images/meditate/daily_calm_bg.png", 
-                      titleColor: Color(0xff3F414E), 
-                      subtitleColor: Color(0xff3F414E), 
-                      textBeforeDot: "45 MIN", 
-                      textAfterDot: "CALMP MUSIC",
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => MeditateMusicPage(title: "Resting Art"))),
-                    ),
-                    RecommendCard(
-                      title: "Good Night", 
-                      color: Color(0xff3F414E), 
-                      image: "assets/images/meditate/happy_morning.png", 
-                      titleColor: Color(0xff3F414E), 
-                      subtitleColor: Color(0xff3F414E), 
-                      textBeforeDot: "45 MIN", 
-                      textAfterDot: "CALMP MUSIC",
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => MeditateMusicPage(title: "Good Night"))),
-                    ),
-                  ],            
-                ),
+                  );
+                },
               )
             ],
           ),

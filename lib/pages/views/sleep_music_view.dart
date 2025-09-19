@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:meditation_app/pages/views/home_page_view.dart';
 import 'package:meditation_app/providers/tab_bar_provider.dart';
+import 'package:meditation_app/providers/audio_data_provider.dart';
+import 'package:meditation_app/models/audio.dart';
 import 'package:provider/provider.dart';
 
 class SleepMusicView extends StatelessWidget {
@@ -42,27 +44,25 @@ class SleepMusicView extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 20,),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GridView.count(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  crossAxisCount: 2,
-                  children: [
-                      RecommendCard(title: "Night Island", color: Color(0xff3F414E), image: "assets/images/sleep/moon_clouds.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                      RecommendCard(title: "Sweet Sleep", color: Color(0xff3F414E), image: "assets/images/sleep/sweet_sleep.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                      RecommendCard(title: "Good Night", color: Color(0xff3F414E), image: "assets/images/sleep/good_sleep.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                      RecommendCard(title: "Night Island", color: Color(0xff3F414E), image: "assets/images/sleep/cloud_pink_moon.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                      RecommendCard(title: "Night Island", color: Color(0xff3F414E), image: "assets/images/sleep/moon_clouds.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                      RecommendCard(title: "Sweet Sleep", color: Color(0xff3F414E), image: "assets/images/sleep/sweet_sleep.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                      RecommendCard(title: "Good Night", color: Color(0xff3F414E), image: "assets/images/sleep/good_sleep.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                      RecommendCard(title: "Night Island", color: Color(0xff3F414E), image: "assets/images/sleep/moon_clouds.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                      RecommendCard(title: "Night Island", color: Color(0xff3F414E), image: "assets/images/sleep/moon_clouds.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                      RecommendCard(title: "Sweet Sleep", color: Color(0xff3F414E), image: "assets/images/sleep/sweet_sleep.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                      RecommendCard(title: "Good Night", color: Color(0xff3F414E), image: "assets/images/sleep/good_sleep.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                      RecommendCard(title: "Night Island", color: Color(0xff3F414E), image: "assets/images/sleep/moon_clouds.png", titleColor: Color(0xffE6E7F2), subtitleColor: Color(0xffE6E7F2), textBeforeDot: "45 MIN", textAfterDot: "SLEEP MUISIC",),
-                  ],
-                ),
+              Consumer<AudioDataProvider>(
+                builder: (context, audioProvider, child) {
+                  final sleepAudios = audioProvider.getAudiosByCategory(Category.sleep);
+                  
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GridView.count(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      children: sleepAudios.map((audio) => RecommendCard(
+                        audio: audio,
+                        showFavorite: true,
+                        titleColor: Color(0xffE6E7F2),
+                        subtitleColor: Color(0xffE6E7F2),
+                      )).toList(),
+                    ),
+                  );
+                },
               )
             ],
           ),
