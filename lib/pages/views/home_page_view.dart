@@ -186,20 +186,25 @@ class RecommendCard extends StatelessWidget {
         if (audio != null) {
           if (audio!.category == Category.sleep) {
             Navigator.push(context, MaterialPageRoute(builder: (_) => SleepHighlightPage(
-              image: displayImage, 
-              title: displayTitle, 
-              textBeforeDot: displayTextBeforeDot, 
-              textAfterDot: displayTextAfterDot
+              audio: audio!
             )));
           } else {
             Navigator.push(context, MaterialPageRoute(builder: (_) => MeditateMusicPage(title: displayTitle)));
           }
         } else {
+          // Fallback: create a temporary Audio object for navigation
+          final tempAudio = Audio(
+            id: "temp_${DateTime.now().millisecondsSinceEpoch}",
+            name: displayTitle,
+            audioUrl: "assets/sounds/meditation-music.mp3",
+            title: displayTitle,
+            img: displayImage,
+            textBeforeDot: displayTextBeforeDot,
+            textAfterDot: displayTextAfterDot,
+            category: Category.sleep,
+          );
           Navigator.push(context, MaterialPageRoute(builder: (_) => SleepHighlightPage(
-            image: displayImage, 
-            title: displayTitle, 
-            textBeforeDot: displayTextBeforeDot, 
-            textAfterDot: displayTextAfterDot
+            audio: tempAudio
           )));
         }
       },

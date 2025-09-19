@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meditation_app/pages/views/home_page_view.dart';
 import 'package:meditation_app/providers/tab_bar_provider.dart';
-import 'package:meditation_app/providers/audio_data_provider.dart';
-import 'package:meditation_app/models/audio.dart';
+import 'package:meditation_app/providers/audio_filter_provider.dart';
 import 'package:provider/provider.dart';
 
 class SleepMusicView extends StatelessWidget {
@@ -44,9 +43,11 @@ class SleepMusicView extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 20,),
-              Consumer<AudioDataProvider>(
-                builder: (context, audioProvider, child) {
-                  final sleepAudios = audioProvider.getAudiosByCategory(Category.sleep);
+              Consumer<AudioFilterProvider>(
+                builder: (context, filterProvider, child) {
+                  final filteredAudios = filterProvider.getFilteredAudios()
+                      .where((audio) => audio.id.startsWith('sleep_'))
+                      .toList();
                   
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -54,7 +55,7 @@ class SleepMusicView extends StatelessWidget {
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       crossAxisCount: 2,
-                      children: sleepAudios.map((audio) => RecommendCard(
+                      children: filteredAudios.map((audio) => RecommendCard(
                         audio: audio,
                         showFavorite: true,
                         titleColor: Color(0xffE6E7F2),

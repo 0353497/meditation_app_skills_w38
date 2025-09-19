@@ -6,9 +6,7 @@ class AudioDataProvider extends ChangeNotifier {
   factory AudioDataProvider() => _instance;
   AudioDataProvider._internal();
   
-  // List with all of the audio files
   final List<Audio> _audioList = [
-    // Sleep category audios
     Audio(
       id: "sleep_001",
       name: "Night Island",
@@ -49,12 +47,11 @@ class AudioDataProvider extends ChangeNotifier {
       textAfterDot: "SLEEP MUSIC",
       category: Category.sleep,
     ),
-    // Meditation category audios
     Audio(
       id: "meditate_001",
-      name: "High Mountains",
+      name: "7 Days of Calm",
       audioUrl: "assets/sounds/meditation-music.mp3",
-      title: "High Mountains",
+      title: "7 Days of Calm",
       img: "assets/images/meditate/7_days_calm_bg.png",
       textBeforeDot: "45 MIN",
       textAfterDot: "CALM MUSIC",
@@ -62,16 +59,6 @@ class AudioDataProvider extends ChangeNotifier {
     ),
     Audio(
       id: "meditate_002",
-      name: "Resting Art",
-      audioUrl: "assets/sounds/meditation-music.mp3",
-      title: "Resting Art",
-      img: "assets/images/meditate/daily_calm_bg.png",
-      textBeforeDot: "45 MIN",
-      textAfterDot: "CALM MUSIC",
-      category: Category.none,
-    ),
-    Audio(
-      id: "meditate_003",
       name: "Relaxing Beach",
       audioUrl: "assets/sounds/meditation-music.mp3",
       title: "Relaxing Beach",
@@ -79,18 +66,30 @@ class AudioDataProvider extends ChangeNotifier {
       textBeforeDot: "45 MIN",
       textAfterDot: "CALM MUSIC",
       category: Category.none,
+      mainColor: Color(0xffFFDA8C)
     ),
     Audio(
-      id: "meditate_004",
-      name: "Happy Morning",
+      id: "meditate_003",
+      name: "Anxiety Release",
       audioUrl: "assets/sounds/meditation-music.mp3",
-      title: "Happy Morning",
-      img: "assets/images/meditate/happy_morning.png",
+      title: "Anxiety Release",
+      img: "assets/images/meditate/anxiet_releace_bg.png",
       textBeforeDot: "45 MIN",
       textAfterDot: "CALM MUSIC",
       category: Category.none,
+      mainColor: Color(0xffFE9A4F)
     ),
-    // Home category audios
+    Audio(
+      id: "meditate_004",
+      name: "Natural Forrest",
+      audioUrl: "assets/sounds/meditation-music.mp3",
+      title: "Naturel Forrest",
+      img: "assets/images/meditate/calm_bg.png",
+      textBeforeDot: "45 MIN",
+      textAfterDot: "CALM MUSIC",
+      category: Category.none,
+      mainColor: Color(0xffD3D265)
+    ),
     Audio(
       id: "home_001",
       name: "Focus",
@@ -121,7 +120,6 @@ class AudioDataProvider extends ChangeNotifier {
       textAfterDot: "3-10 MIN",
       category: Category.none,
     ),
-    // Anxious category
     Audio(
       id: "anxious_001",
       name: "Calm Anxiety",
@@ -132,7 +130,6 @@ class AudioDataProvider extends ChangeNotifier {
       textAfterDot: "ANXIETY RELIEF",
       category: Category.anxious,
     ),
-    // Kids category
     Audio(
       id: "kids_001",
       name: "Bedtime Stories",

@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 enum Category { none, anxious, sleep, kids }
 
 class Audio {
@@ -11,6 +13,7 @@ class Audio {
   final String? textBeforeDot;
   final String? textAfterDot;
   final Category category;
+  final Color mainColor;
 
   Audio({
     required this.id,
@@ -22,6 +25,7 @@ class Audio {
     required this.textAfterDot, 
     required this.category,
     this.isDownloaded = false, 
-    this.isFavorite = false
+    this.isFavorite = false,
+    this.mainColor = const Color(0xff496AAA)
   });
 }

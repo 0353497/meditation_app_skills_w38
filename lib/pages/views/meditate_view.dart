@@ -1,70 +1,94 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:meditation_app/components/sleep_icon_buttons_row.dart';
 import 'package:meditation_app/models/mediations.dart';
 import 'package:meditation_app/pages/meditate/meditate_highlight_page.dart';
-import 'package:meditation_app/pages/views/normal_sleep_view.dart';
+import 'package:meditation_app/providers/audio_filter_provider.dart';
+import 'package:provider/provider.dart';
 
 class MeditateView extends StatelessWidget {
-  MeditateView({super.key});
-  final List<Mediations> mediations = [
-    Mediations(mainColor: Color(0xff496AAA) ,image: "assets/images/meditate/7_days_calm_bg.png", title: "7 Days of Calm", height: 240),
-    Mediations(mainColor: Color(0xffFFDA8C) ,image: "assets/images/meditate/surf_waves_bg.png", title: "Relaxing Beach", height: 200),
-    Mediations(mainColor: Color(0xffFE9A4F) ,image: "assets/images/meditate/anxiet_releace_bg.png", title: "Anxiety Release", height: 200),
-    Mediations(mainColor: Color(0xffCACB68) ,image: "assets/images/meditate/calm_bg.png", title: "Relaxing Forrest", height: 200),
-  ];
+  const MeditateView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            spacing: 20,
-            children: [
-              Column(
-                spacing: 20,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text("Meditate",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 32
+    return SingleChildScrollView(
+      child: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(image: AssetImage("assets/images/meditate/play_meditate_bg.png"), fit: BoxFit.contain)
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SafeArea(
+            child: Column(
+              spacing: 20,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+               
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  spacing: 10,
+                  children: [
+                    Text("Meditate",
+                      style: TextStyle(
+                        fontSize: 26,
+                        color: Color(0xff3F414E),
+                        fontWeight: FontWeight.bold
+                      ),
                     ),
-                  ),
-                    Text("We can learn how to recognize when our minds are doing their normal everyday acrobatics",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey
+                    Text("we can learn how to recognize when our minds are doing their normal everyday acrobatics.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey
+                      ),
                     ),
-                  ),
-                  
-                ],
-              ),
-              SleepIconButtonsRow(backgroundColor: Colors.grey, highlightLabelColor: Color(0xff3F414E),),
-              const DailyCalm(),
-              SizedBox(
-                height: 500,
-                child: Wrap(
-                  direction: Axis.vertical,
-                  spacing: 20,
-                  runSpacing: 20,
-                  children:  List.generate(mediations.length, (index) {
-                    Mediations mediation = mediations[index];
-                    return MeditationContainer(mediation: mediation, onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => MeditateHighlitePage(mediation: mediation)));
-                    },);
-                  }),
+                    
+                  ],
                 ),
-              ),
-            ],
+                SleepIconButtonsRow(backgroundColor: Colors.grey, highlightLabelColor: Color(0xff3F414E),),
+                const DailyCalm(),
+                Consumer<AudioFilterProvider>(
+                  builder: (context, filterProvider, child) {
+                    int index = 0;
+                    final filteredAudios = filterProvider.getFilteredMeditateAudios();
+                    return SizedBox(
+                      height: 600,
+                      child: Wrap(
+                        direction: Axis.vertical,
+                        spacing: 20,
+                        runSpacing: 20,
+                        children: filteredAudios.map((audio) {
+                          final mediation = Mediations(
+                            mainColor: audio.mainColor,
+                            image: audio.img ?? "assets/images/meditate/7_days_calm_bg.png",
+                            title: audio.title,
+                            height: _getHeight(index) 
+                          );
+                          index++;
+                          return MeditationContainer(
+                            mediation: mediation,
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (_) => MeditateHighlitePage(audio: audio)));
+                            },
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+  
+  double _getHeight(int index) {
+    if (index == 1) return 220;
+    if (index == 2) return 180;
+    if (index == 3) return 240;
+    return 240;
   }
 }
 
