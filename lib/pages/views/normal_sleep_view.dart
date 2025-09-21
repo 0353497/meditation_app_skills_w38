@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:meditation_app/pages/sleep/sleep_play_music_page.dart';
 import 'package:meditation_app/pages/views/home_page_view.dart';
+import 'package:meditation_app/pages/views/sleep_music_view.dart';
 import 'package:meditation_app/providers/audio_filter_provider.dart';
 import 'package:meditation_app/components/sleep_icon_buttons_row.dart';
+import 'package:meditation_app/providers/tab_bar_provider.dart';
 import 'package:provider/provider.dart';
 
 class NormalSleepView extends StatelessWidget {
@@ -80,7 +82,7 @@ class NormalSleepView extends StatelessWidget {
                           foregroundColor: WidgetStatePropertyAll(Color(0xff3F414E))
                         ),
                         onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => SleepPlayMusicPage(title: "The Ocean Moon", label: "Non-stop 8-hour mixes of our \n most popular sleep audio",)));
+                          context.read<TabBarProvider>().changeCurrentSleepView(2);
                         },
                         child: Text("START"),
                       )
